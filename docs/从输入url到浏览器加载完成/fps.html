@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const fpsCompatibility = (function() {
+        return (
+          window.requestAnimationFrame ||
+          window.webkitRequestAnimationFrame ||
+          function(callback) {
+            window.setTimeout(callback, 1000 / 60)
+          }
+        )
+      })()
+
+      const fpsConfig = {
+        lastTime: performance.now(), // performance 是一个浏览器提供的API
+        lastFameTime: performance.now(),
+        frame: 0,
+      }
+
+      const fpsList = []
+      const fpsLoop = function() {
+        const first = performance.now()
+        const diff = first - fpsConfig.lastFameTime
+        // console.log(diff)
+        fpsConfig.lastFameTime = first
+        const fps = Math.round(1000 / diff)
+        fpsConfig.frame = fpsConfig.frame + 1
+        if (first > 1000 + fpsConfig.lastTime) {
+          // 1s之后
+          const fps = Math.round(
+            (fpsConfig.frame * 1000) / (first - fpsConfig.lastTime)
+          )
+          fpsList.push(fps)
+          console.log(`time: ${new Date()} fps is：`, fps)
+          console.log(fpsList)
+          fpsConfig.frame = 0
+          fpsConfig.lastTime = first
+        }
+
+        fpsCompatibility(fpsLoop)
+      }
+
+      fpsLoop()
+
+      function checkFPS(fpsList, below = 20, last = 3) {
+        console.log(fpsList)
+        let count = 0
+
+        for (let i = 0; i < fpsList.length; i++) {
+          if (fpsList[i] && fpsList[i] < below) {
+            count++
+          } else {
+            count = 0
+          }
+
+          if (count >= last) {
+            return true
+          }
+        }
+
+        return false
+      }
+
+
+  let res = checkFPS(fpsList)
+  
+    </script>
+  </body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      function myNew(Func, ...args) {
+        var instance = Object.create(Function.prototype)
+        let res = Func.apply(instance, args)
+        return typeof res === 'object' ? res || instance : instance
+      }
+      function Foo(name, age) {
+        this.name = name
+        return {
+          age: age,
+        }
+      }
+
+      const bar = myNew(Foo, 'wind', 18)
+      // console.log(bar.name) // undefined
+      // console.log(bar.age) // 18
+
+      
+    </script>
+  </body>
+</html>

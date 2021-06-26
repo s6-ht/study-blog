@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      var tree = {
+        name: '中国',
+        children: [
+          {
+            name: '北京',
+            children: [
+              {
+                name: '朝阳群众',
+                children: [
+                  {
+                    name: '西宁市',
+                    code: '0521',
+                  },
+                ],
+              },
+              {
+                name: '海淀区',
+              },
+              {
+                name: '昌平区',
+              },
+            ],
+          },
+          {
+            name: '浙江省',
+            children: [
+              {
+                name: '杭州市',
+                code: '0571',
+              },
+              {
+                name: '嘉兴市',
+              },
+              {
+                name: '绍兴市',
+              },
+              {
+                name: '宁波市',
+              },
+            ],
+          },
+        ],
+      }
+      var node = dfs(tree)
+      console.log(node) // 输出： { name: '西宁市', code: '0521' }
+
+      function dfs(tree, target) {
+        let stack = []
+        let root = JSON.parse(JSON.stringify(tree))
+        if (root) {
+          stack.push(root)
+        }
+        while (stack.length !== 0) {
+          if (root.children && root.children.length) {
+            stack.push(root.children[0])
+            root.children.shift()
+            root = stack[stack.length - 1]
+          }
+          if (!root.children) {
+            stack.pop()
+            root = stack[stack.length - 1]
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

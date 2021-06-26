@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      let arr = [20, 12, 15, 1, 5, 49]
+      // 冒泡排序
+      function bubbleSort(arr) {
+        let len = arr.length
+        let temp
+        for (let i = 0; i < len; i++) {
+          // 当某一轮isSort没有被重置的时候，就说明已经排序完成了
+          let isSort = false
+          for (let j = 0; j < len - 1 - i; j++) {
+            if (arr[j] > arr[j + 1]) {
+              let temp = arr[j]
+              arr[j] = arr[j + 1]
+              arr[j + 1] = temp
+              isSort = true
+            }
+          }
+          if (!isSort) break
+        }
+        return arr
+      }
+      // 插入排序的本质包括两点：1. 如果比较当前项，那么保存当前项的值，该位置可视为空缺；
+      // 2. 当前项前面的所有值都是已经排序完成的
+      function insertionSort(arr) {
+        let len = arr.length
+        // i = 0时，只有一项，默认已经排好序，因此从1开始
+        for (let i = 1; i < len; i++) {
+          let cur = arr[i]
+          let j = i - 1
+          while (j >= 0 && arr[j] > cur) {
+            arr[j + 1] = arr[j]
+            j--
+          }
+          if (j !== i - 1) {
+            arr[j + 1] = cur
+          }
+        }
+        return arr
+      }
+
+      //选择排序： 找到从该位置开始，到最后一项中最小的值，然后交换
+      function selectionSort(arr) {
+        let len = arr.length
+        let minIndex
+        for (let i = 0; i < len - 1; i++) {
+          // 需要初始化为i, 因为需要从当前项开始比较
+          minIndex = i
+          for (let j = i + 1; j < len; j++) {
+            if (arr[minIndex] > arr[j]) {
+              minIndex = j
+            }
+          }
+          if (minIndex !== i) {
+            let temp = arr[i]
+            arr[i] = arr[minIndex]
+            arr[minIndex] = temp
+          }
+        }
+        return arr
+      }
+
+      // 快速排序：找到中间位置，从原数组中删除该值，然后将大于中间位置的值的放入right，小于的放入left， 然后递归left和right进行排序
+      function quickSort1(arr) {
+        // 递归的出口
+        if (arr.length <= 1) return arr
+        let len = arr.length
+        let middleIndex = Math.floor(len / 2)
+        let middleValue = arr.splice(middleIndex, 1)
+        let left = []
+        let right = []
+        for (let i = 0; i < arr.length; i++) {
+          if (arr[i] < middleValue) {
+            left.push(arr[i])
+          } else {
+            right.push(arr[i])
+          }
+        }
+        return quickSort1(left).concat(middleValue, quickSort1(right))
+      }
+
+      // 归并排序: 将一个数组从中间分为两个数组，最终这个数组会被拆分成一组一组的值
+      // left: [20, 12, 15]  right: [1, 5, 49]
+      // 执行mergeSort([20, 12, 15])
+      // left: [20] right: [12, 15]
+      // 执行mergeSort([12, 15])
+      // left: [12] right: [15]
+      // 执行merge([12], 15), 返回[12, 15]
+      // 执行merge([20], [12, 15]), 返回[12, 15, 20]
+      // 执行mergeSort([1, 5, 49])
+      // left: [1]  right: [5, 49]
+      // 执行mergeSort([ 5, 49])
+      // left: [5] right: [49]
+      // 执行merge([5], [49]), 返回[5, 49]
+      // 执行merge([1], [5, 49])  返回[1, 5, 49]
+      // 执行merge([12, 15, 20], [1 5, 40])
+      function mergeSort(arr) {
+        let len = arr.length
+        if (len <= 1) return arr
+        let middle = Math.floor(len / 2)
+        let left = arr.slice(0, middle)
+        let right = arr.slice(middle)
+        return merge(mergeSort(left), mergeSort(right))
+      }
+
+      function merge(left, right) {
+        let res = []
+        while (left.length && right.length) {
+          if (left[0] < right[0]) {
+            res.push(left.shift())
+          } else {
+            res.push(right.shift())
+          }
+        }
+        while (left.length) res.push(left.shift())
+        while (right.length) res.push(right.shift())
+        return res
+      }
+
+      let res = mergeSort(arr)
+      console.log(res)
+    </script>
+  </body>
+</html>

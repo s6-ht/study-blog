@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      MyPromise.resolve = function(param) {
+        if (param instanceof MyPromise) return param
+        return new MyPromise((resolve, reject) => {
+          if (param && param.then && typeof param.then === 'function') {
+            param.then(resolve, reject)
+          } else {
+            resolve(param)
+          }
+        })
+      }
+
+      MyPromise.reject = function(param) {
+        return new MyPromise((resolve, reject) => {
+          reject(param)
+        })
+      }
+
+      MyPromise.all = function(promises) {
+        return new Promise((resolve, reject) => {
+          let resultArr = []
+          let len = promises.length
+          if (!len) {
+            resolve(resultArr)
+            return
+          }
+
+          const handle = (index, data) => {
+            resultArr[index] = data
+            if (index === len - 1) resolve(resultArr)
+          }
+
+          for (let i = 0; i < len; i++) {
+            Promise.resolve(promises[i])
+              .then((data) => {
+                handle(i, data)
+              })
+              .catch((e) => {
+                reject(e)
+              })
+          }
+        })
+      }
+    </script>
+  </body>
+</html>

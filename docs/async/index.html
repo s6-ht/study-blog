@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      function asyncToGenerator(generatorFn) {
+        return function () {
+          let gen = generatorFn.apply(this, arguments)
+          return new Promise((resolve, reject) => {
+            function step(key, data) {
+              let generatorResult
+              try {
+                generatorResult = gen[key](data)
+              }catch(e) {
+                return reject(e)
+              }
+
+              const {value, done} = generatorResult
+              if(done) {
+                return resolve(value)
+              } else {
+                // await语句执行后返回的值并在then中执行后面的语句，并且把值传递进去
+                return Promise.resolve(value).then(val => {
+                  step('next', val)
+                })
+              }
+            }
+            step('next')
+          })
+        }
+      }
+      function 
+    </script>
+  </body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge, chrome=1" />
+    <title>debounce</title>
+    <style>
+      #container {
+        width: 100%;
+        height: 200px;
+        line-height: 200px;
+        text-align: center;
+        color: #fff;
+        background-color: #444;
+        font-size: 30px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="container"></div>
+    <script>
+      var count = 1
+      var container = document.getElementById('container')
+
+      function getUserAction(e) {
+        // this e
+        container.innerHTML = count++
+      }
+
+      function debounce(func, wait, immediate) {
+        let timeout, result
+        let debounced = function() {
+          let self = this
+          let args = arguments
+          if(timeout) clearTimeout(timeout)
+          if(!timeout && immediate) {
+            result = fn.apply(self, args)
+          }
+          timer = setTimeout(() => {
+            func.apply(self, args)
+          }, wait)
+        }
+      }
+
+      // immediate: 是否立即执行一次, 隔n秒再执行一次
+      function debounce(func, wait, immediate) {
+        var timer = null,
+          result
+        var debounded = function() {
+          var self = this
+          var args = arguments
+          if (timer) clearTimeout(timer)
+          if (!timer && immediate) {
+            // 如果已经执行过，不再执行
+            timer = setTimeout(function() {
+              timer = null
+            }, wait)
+            result = func.apply(self, args)
+          }
+          timer = setTimeout(function() {
+            func.apply(self, args)
+          }, wait)
+          return result
+        }
+        debounded.cancel = function() {
+          clearTimeout(timer)
+          timer = null
+        }
+        return debounded
+      }
+      container.onmousemove = debounce(getUserAction, 1000, true)
+    </script>
+  </body>
+</html>

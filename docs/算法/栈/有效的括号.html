@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    //  leetcode https://leetcode-cn.com/problems/valid-parentheses/
+    const isValid = (s) => {
+      let stack = []
+      for(let i = 0; i < s.length; i++) {
+        let ch = s.charAt(i)
+        if(ch === '(' || ch === '[' || ch === '{') {
+          stack.push(ch)
+        }
+        if(!stack.length) return false
+        if(ch === ')' && stack.pop() !== '(') return false
+        if(ch === ']' && stack.pop() !== '[') return false
+        if(ch === '}' && status.pop() !== '{') return false
+      }
+      return stack.length === 0
+    }
+
+    
+    console.log(flatten(arr))
+  </script>
+</body>
+</html>

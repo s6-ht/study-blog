@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const PENDING = 'pendig'
+      const FULFILLED = 'fulfilled'
+      const REJECTED = 'rejected'
+
+      function MyPromise(excuator) {
+        
+        let self = this
+        self.status = PENDING
+        self.value = null
+        self.error = null
+        self.onFulfilledCallbacks = []
+        self.onRejectedCallbacks = []
+
+        // 状态变为成功
+        let resolve = (value) => {
+          if (self.status === PENDING) {
+            self.value = value
+            self.status = FULFILLED
+            self.onFulfilledCallbacks.forEach((callback) =>
+              callback(self.value)
+            )
+          }
+        }
+
+        let reject = (error) => {
+          if (self.status === PENDING) {
+            self.error = error
+            self.status = REJECTED
+            self.onRejectedCallbacks.forEach((callback) => callback(self.error))
+          }
+        }
+
+        try {
+          excuator(resolve, reject)
+        } catch (e) {
+          reject(e)
+        }
+      }
+      // 链式调用, 由于promise的状态变化之后不可更改, 因此需要返回一个新的Promise
+      MyPromise.prototype.then = function(onFulfilled, onRejected) {
+        onFulfilled =
+          typeof onFulfilled === 'function' ? onFulfilled : (value) => value
+        onRejected =
+          typeof onRejected === 'function'
+            ? onRejected
+            : (error) => {
+                throw error
+              }
+        let bridgePromise
+        // 保存this, 调用resolvePromise时会改变this
+        let self = this
+        if (self.status === FULFILLED) {
+          bridgePromise = new MyPromise((resolve, reject) => {
+            setTimeout(() => {
+              try {
+                let x = onFulfilled(self.value)
+                resolvePromise(bridgePromise, x, resolve, reject)
+              } catch (e) {
+                console.error(e)
+                reject(e)
+              }
+            }, 0)
+          })
+          console.log(bridgePromise)
+          return bridgePromise
+        } else if (self.status === REJECTED) {
+          return (bridgePromise = new MyPromise((resolve, reject) => {
+            setTimeout(() => {
+              try {
+                let x = onRejected(self.onRejected)
+                resolvePromise(bridgePromise, x, resolve, reject)
+              } catch (e) {
+                reject(e)
+              }
+            }, 0)
+          }))
+        } else if (self.status === PENDING) {
+          // 当promise中的resolve放在一个异步操作中时(eg: setTimeut), 会进入这里
+          // 先将回调保存, 当Promise中的resolve或者reject被调用时, 执行所有的回调函数
+          // resolve和reject决定了bridgePromise的状态, 因为bridgePromise时new MyPromise执行后的一个结果
+          return (bridgePromise = new MyPromise((resolve, reject) => {
+            self.onFulfilledCallbacks.push((value) => {
+              try {
+                let x = onFulfilled(value)
+                // 解决x
+                resolvePromise(bridgePromise, x, resolve, reject)
+              } catch (e) {
+                reject(e)
+              }
+            })
+            self.onRejectedCallbacks.push((error) => {
+              try {
+                let x = onRejected(error)
+                resolvePromise(bridgePromise, x, resolve, reject)
+              } catch (e) {
+                reject(e)
+              }
+            })
+          }))
+        }
+      }
+
+      function resolvePromise(bridgePromise, x, resolve, reject) {
+        if (x === bridgePromise) {
+          return reject(new TypeError('valid param type error'))
+        }
+        let called
+        if ((typeof x === 'object' || typeof x === 'function') && x !== null) {
+          try {
+            let then = x.then
+            if (typeof then === 'function') {
+              // then中两个方法只能其中一个, 且只能被调用一次
+              then.call(
+                x,
+                (y) => {
+                  if (called) return
+                  called = true
+                  resolvePromise(bridgePromise, y, resolve, reject)
+                },
+                (error) => {
+                  if (called) return
+                  called = true
+                  reject(error)
+                }
+              )
+            } else {
+              resolve(x)
+            }
+          } catch (e) {
+            if (called) return
+            called = true
+            reject(e)
+          }
+        } else {
+          resolve(x)
+        }
+      }
+
+      let promiseTest = new MyPromise((resolve, reject) => {
+        // setTimeout(() => {
+        resolve(1)
+        // })
+      })
+
+      promiseTest
+        .then((data) => {
+          console.log(data)
+        })
+        .then((data) => {
+          console.log(2)
+        })
+        .then((data) => {
+          console.log(3)
+        })
+    </script>
+  </body>
+</html>

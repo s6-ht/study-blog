@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      let gas = [5, 1, 2, 3, 4]
+      cost = [4, 4, 1, 5, 1]
+      var canCompleteCircuit = function(gas, cost) {
+        let totalGas = 0
+        let totalCost = 0
+        for (let i = 0; i < gas.length; i++) {
+          totalGas += gas[i]
+          totalCost += cost[i]
+        }
+
+        if (totalCost > totalGas) return -1
+        let start = 0
+        let currentGas = 0
+        for (let i = 0; i < gas.length; i++) {
+          currentGas = currentGas + gas[i] - cost[i]
+          if (currentGas < 0) {
+            currentGas = 0
+            start = i + 1
+          }
+        }
+        return start
+      }
+
+      let res = canCompleteCircuit(gas, cost)
+      console.log(res)
+    </script>
+  </body>
+</html>

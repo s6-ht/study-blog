@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      var num = [ 9, 9]
+      var plusOne = function(num) {
+        if(num.length === 0) return [1]
+        // let complement = 0
+        // let right = num.length - 1
+        // while (right >= 0) {
+        //   if (num[right] < 9) {
+        //     num[right] = complement ? num[right] + complement : num[right] + 1
+        //     return num
+        //   } else {
+        //     num[right] = 0
+        //     complement = 1
+        //     if(right === 0) {
+        //       num.unshift(complement)
+        //       return num
+        //     } else {
+        //       right--
+        //     }
+        //   }
+        // }
+
+        for(let i = num.length - 1; i >= 0; i--) {
+          if(num[i] !== 9) {
+            num[i]++
+            return num
+          } else {
+            num[i] = 0
+          }
+        }
+        return [1, ...num]
+      }
+
+      let res = plusOne(num)
+      console.log(res)
+    </script>
+  </body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // function SuperType() {
+      //   this.name = 'wind'
+      //   this.colors = ['red']
+      // }
+      // SuperType.prototype.getColors = function() {
+      //   console.log(this.colors)
+      // }
+
+      // function Child() {}
+      // // 此时Child.prototype就拥有了SuperType中的所有属性和方法
+      // Child.prototype = new SuperType()
+      // var child1 = new Child()
+      // console.log(child1.colors)
+      // child1.colors = 'wind1'
+      // console.log(child1)
+      // var child2 = new Child()
+      // console.log(child2.colors)
+
+      // 寄生组合
+      function Parent(name) {
+        this.name = name
+        this.colors = ['red', 'blue', 'green']
+      }
+
+      Parent.prototype.getName = function() {
+        console.log(this.name)
+      }
+
+      function Child(name, age) {
+        Parent.call(this, name)
+        this.age = age
+      }
+
+      // 关键的三步
+      var F = function() {}
+
+      F.prototype = Parent.prototype
+
+      Child.prototype = new F()
+      Child.prototype.sayHi = function() {
+        console.log('hi')
+      }
+      console.log(Child.prototype.__proto__ === F.prototype)
+      console.log(F.prototype === Parent.prototype)
+
+      var child1 = new Child('wind', '18')
+      var child2 = new Child('kevin', '19')
+
+    </script>
+  </body>
+</html>

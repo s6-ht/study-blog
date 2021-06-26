@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function* gen() {
+      console.log('enter')
+      let a = yield 1
+      let b = yield (function() {return 2})()
+      return 3
+    }
+    var g = gen()
+    console.log(typeof g)
+    console.log(g)
+  </script>
+</body>
+</html>

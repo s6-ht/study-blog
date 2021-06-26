@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width= , initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+     const reverseLise = (head) => {
+       if(!head) return null
+       let pre = null, cur = head
+       while(cur) {
+         let next = cur.next
+         cur.next = pre
+         pre = cur
+         cur = next
+       }
+      //  因为是一个链表，所以需要返回最后一个
+       return pre
+     }
+     
+    // 区间反转
+    // 原理: m前面节点的next指向n, m节点的next指向n后面的一个节点
+    const reverseBetween = (head, m, n) =>{
+      let count = m - n
+      let p = dummyHead = new ListNode()
+      p.next = head
+      let pre
+      let cur
+      // m前面的节点
+      let front
+      // m节点
+      let tail
+      // 循环，找到m前面的那一个节点
+      for(let i = 0; i < m - 1; i++) {
+        p = p.next
+      }
+      front = p
+      pre = tail = p.next
+
+      // 只反转m-n区间内部的, m和n暂时不反转
+      for(let i = 0; i < count; i++) {
+        let next = cur.next
+        cur.next = pre
+        pre = cur
+        cur = next
+      }
+      // 执行上面的过程后, pre就是n节点, cur是n后面的那个节点
+      front.next = pre
+      tail.next = cur
+      // 继续执行n后面的next
+      return dummyHead.next
+    }
+
+
+    </script>
+  </body>
+</html>

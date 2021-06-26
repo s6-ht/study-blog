@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      let S = 'ab#c',
+        T = 'ad#c'
+      var backspaceCompare = function(s, t) {
+        // let str1 = ''
+        // for(let i = 0; i < s.length; i++) {
+        //   if(s[i] !== '#') {
+        //     str1.push(s[i])
+        //   } else {
+        //     str1.pop()
+        //   }
+        // }
+        // let str2 = []
+        // for(let i = 0; i < t.length; i++) {
+        //   if(t[i] !== '#') {
+        //     str2.push(t[i])
+        //   } else {
+        //     str2.pop()
+        //   }
+        // }
+        // return str1.join() === str2.join()
+        let i = s.length - 1,
+          j = t.length - 1,
+          sSpace = 0,
+          tSpace = 0
+        while (i >= 0 || j >= 0) {
+          while (i >= 0) {
+            if (s[i] === '#') {
+              sSpace++
+              i--
+            } else if (sSpace > 0) {
+              sSpace--
+              i--
+            } else {
+              break
+            }
+          }
+          while (j >= 0) {
+            if (t[j] === '#') {
+              tSpace++
+              j--
+            } else if (tSpace > 0) {
+              tSpace--
+              j--
+            } else {
+              break
+            }
+          }
+          if (s[i] !== t[j]) {
+            console.log(s[i], t[j])
+            return false
+          }
+          i--
+          j--
+        }
+        return true
+      }
+      let res = backspaceCompare(S, T)
+      console.log(res)
+    </script>
+  </body>
+</html>

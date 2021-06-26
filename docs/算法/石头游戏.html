@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      let arr = [7,8,8,10]
+      var stoneGame = function(piles) {
+        let left = 0
+        let right = piles.length - 1
+        let res1 = 0
+        let res2 = 0
+        while (left <= right) {
+          if (piles[left + 1] >= piles[right - 1]) {
+            res1 += piles[right]
+            right--
+            if (piles[left] > piles[right]) {
+              res2 += piles[left]
+              left++
+            } else {
+              res2 += piles[right]
+              right--
+            }
+          } else {
+            res1 += piles[left]
+            left++
+            if (piles[left] > piles[right]) {
+              res2 += piles[left]
+              left++
+            } else {
+              res2 += piles[right]
+              right--
+            }
+          }
+        }
+        if (res1 > res2) {
+          return true
+        } else {
+          return false
+        }
+      }
+      let res = stoneGame(arr)
+      console.log(res)
+    </script>
+  </body>
+</html>

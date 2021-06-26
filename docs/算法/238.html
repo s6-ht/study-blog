@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      let arr = [1, 2, 3, 4]
+
+      var productExceptSelf = function(nums) {
+        if (nums.length === 0) return nums
+        if (arr.length < 3) {
+          return [nums[1], nums[0]]
+        }
+        // 到每一位的乘积
+        let dpl = []
+        const len = nums.length
+        let dpr = []
+        for (let i = 0; i < nums.length; i++) {
+          if (i === 0) {
+            dpl[i] = nums[i]
+          } else {
+            dpl[i] = nums[i] * dpl[i - 1]
+          }
+        }
+        for (let i = len - 1; i >= 0; i--) {
+          if (i === len - 1) {
+            dpr[i] = nums[i]
+          } else {
+            dpr[i] = nums[i] * dpr[i + 1]
+          }
+        }
+
+        let res = []
+        for(let i = 0; i < nums.length; i++) {
+          if(i === 0) {
+            res[i] = dpr[i + 1]
+          } else if(i === len - 1) {
+            res[i] = dpl[i - 1]
+          } else {
+            res[i] = dpl[i - 1] * dpr[ i + 1]
+          }
+        }
+        console.log(res)
+        return res
+      }
+
+      productExceptSelf(arr)
+    </script>
+  </body>
+</html>
